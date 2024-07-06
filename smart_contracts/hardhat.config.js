@@ -23,7 +23,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 const POLYGONSCAN_API_KEY = process.env.POLYGONSCAN_API_KEY;
 const Sepolia_RPC_URL = process.env.Sepolia_RPC_URL;
 const MUMBAI_RPC_URL = process.env.MUMBAI_RPC_URL;
-const PRIVATE_KEY = "153f2fcf6fd1d6dffb9a6b91241412adffd112bd5038ca7e540fc7a1609cdaad";
+const PRIVATE_KEY = "e071de58b7598c8e69ed3b274ab60d0c2a91a0d1337e905396a00676367c8618";
 
 module.exports = {
   solidity: {
@@ -37,11 +37,11 @@ module.exports = {
     hardhat: {
       chainId: 31337,
     },
-    ganache: {
-      chainId: 1337,
-      url: "http://127.0.0.1:7545",
-      accounts: [PRIVATE_KEY],
-    },
+    // ganache: {
+    //   chainId: 1337,
+    //   url: "http://127.0.0.1:7545",
+    //   accounts: [PRIVATE_KEY],
+    // },
     sepolia: {
       url: Sepolia_RPC_URL,
       accounts: [PRIVATE_KEY],
