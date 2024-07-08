@@ -15,19 +15,25 @@ jobs:
           version: 20.10.7
       - run:
           name: Build Frontend Docker Image
-          command: docker build -t $DOCKERHUB_USERNAME/frontend:latest ./frontend
+          command: docker build -t frontend:latest ./frontend
       - run:
           name: Build Backend Docker Image
-          command: docker build -t $DOCKERHUB_USERNAME/backend:latest ./smart_contracts
+          command: docker build -t backend:latest ./smart_contracts
       - run:
           name: Login to Docker Hub
-          command: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
+          command: echo "$DOCKERHUB_CONTEXT" | docker login --username=_ --password-stdin
+          environment:
+            DOCKERHUB_CONTEXT: << parameters.contexts.dockerhub-context >>
       - run:
           name: Push Frontend Image
-          command: docker push $DOCKERHUB_USERNAME/frontend:latest
+          command: docker tag frontend:latest $DOCKERHUB_REGISTRY/frontend:latest && docker push $DOCKERHUB_REGISTRY/frontend:latest
+          environment:
+            DOCKERHUB_REGISTRY: docker.io/$DOCKERHUB_USERNAME
       - run:
           name: Push Backend Image
-          command: docker push $DOCKERHUB_USERNAME/backend:latest
+          command: docker tag backend:latest $DOCKERHUB_REGISTRY/backend:latest && docker push $DOCKERHUB_REGISTRY/backend:latest
+          environment:
+            DOCKERHUB_REGISTRY: docker.io/$DOCKERHUB_USERNAME
 
 workflows:
   version: 2
