@@ -23,7 +23,7 @@ jobs:
           name: Login to Docker Hub
           command: echo "$DOCKERHUB_CONTEXT" | docker login --username=_ --password-stdin
           environment:
-            DOCKERHUB_CONTEXT: << parameters.contexts.dockerhub-context >>
+            DOCKERHUB_CONTEXT: $DOCKERHUB_CONTEXT
       - run:
           name: Push Frontend Image
           command: docker tag frontend:latest $DOCKERHUB_REGISTRY/frontend:latest && docker push $DOCKERHUB_REGISTRY/frontend:latest
@@ -39,4 +39,5 @@ workflows:
   version: 2
   build_and_push:
     jobs:
-      - build
+      - build:
+          context: dockerhub-context  # Specify the context here if needed
