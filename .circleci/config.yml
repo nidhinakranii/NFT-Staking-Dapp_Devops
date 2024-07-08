@@ -1,0 +1,36 @@
+version: 2.1
+
+executors:
+  docker-executor:
+    docker:
+      - image: circleci/node:14
+
+jobs:
+  build:
+    docker:
+      - image: circleci/node:14
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 20.10.7
+      - run:
+          name: Build Frontend Docker Image
+          command: docker build -t $DOCKERHUB_USERNAME/frontend:latest ./frontend
+      - run:
+          name: Build Backend Docker Image
+          command: docker build -t $DOCKERHUB_USERNAME/backend:latest ./smart_contracts
+      - run:
+          name: Login to Docker Hub
+          command: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
+      - run:
+          name: Push Frontend Image
+          command: docker push $DOCKERHUB_USERNAME/frontend:latest
+      - run:
+          name: Push Backend Image
+          command: docker push $DOCKERHUB_USERNAME/backend:latest
+
+workflows:
+  version: 2
+  build_and_push:
+    jobs:
+      - build

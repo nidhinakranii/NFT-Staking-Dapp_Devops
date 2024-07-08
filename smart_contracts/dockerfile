@@ -15,7 +15,6 @@ COPY . .
 
 # Set environment variables for deployment
 ENV SEPOLIA_RPC_URL="https://eth-sepolia.g.alchemy.com/v2/AIjeurCVedrZLU2sSeJSrrsV_sC975tW"
-ENV PRIVATE_KEY="e071de58b7598c8e69ed3b274ab60d0c2a91a0d1337e905396a00676367c8618"
 
 # Command to deploy contracts to Sepolia network
 CMD ["npx", "hardhat", "run", "scripts/deploy-vault.js", "--network", "sepolia"]
