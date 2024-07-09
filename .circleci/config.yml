@@ -21,23 +21,25 @@ jobs:
           command: docker build -t backend:latest ./smart_contracts
       - run:
           name: Login to Docker Hub
-          command: echo "$DOCKERHUB_CONTEXT" | docker login --username=_ --password-stdin
+          command: |
+            echo "$DOCKERHUB_PASSWORD" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin
           environment:
-            DOCKERHUB_CONTEXT: $DOCKERHUB_CONTEXT
+            DOCKERHUB_PASSWORD: $DOCKERHUB_PASSWORD
+            DOCKERHUB_USERNAME: $DOCKERHUB_USERNAME
       - run:
           name: Push Frontend Image
-          command: docker tag frontend:latest $DOCKERHUB_REGISTRY/frontend:latest && docker push $DOCKERHUB_REGISTRY/frontend:latest
-          environment:
-            DOCKERHUB_REGISTRY: docker.io/$DOCKERHUB_USERNAME
+          command: |
+            docker tag frontend:latest $DOCKERHUB_USERNAME/frontend:latest
+            docker push $DOCKERHUB_USERNAME/frontend:latest
       - run:
           name: Push Backend Image
-          command: docker tag backend:latest $DOCKERHUB_REGISTRY/backend:latest && docker push $DOCKERHUB_REGISTRY/backend:latest
-          environment:
-            DOCKERHUB_REGISTRY: docker.io/$DOCKERHUB_USERNAME
+          command: |
+            docker tag backend:latest $DOCKERHUB_USERNAME/backend:latest
+            docker push $DOCKERHUB_USERNAME/backend:latest
 
 workflows:
   version: 2
   build_and_push:
     jobs:
       - build:
-          context: dockerhub-context  # Specify the context here if needed
+          context: dockerhub-context
