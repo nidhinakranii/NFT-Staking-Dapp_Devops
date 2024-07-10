@@ -9,9 +9,6 @@ jobs:
   build:
     docker:
       - image: circleci/node:14
-        auth:
-          username: $DOCKERHUB_USERNAME
-          password: $DOCKERHUB_PASSWORD
     steps:
       - checkout
       - setup_remote_docker:
@@ -26,9 +23,6 @@ jobs:
           name: Login to Docker Hub
           command: |
             echo "$DOCKERHUB_PASSWORD" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin
-          environment:
-            DOCKERHUB_PASSWORD: $DOCKERHUB_PASSWORD
-            DOCKERHUB_USERNAME: $DOCKERHUB_USERNAME
       - run:
           name: Push Frontend Image
           command: |
