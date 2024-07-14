@@ -15,7 +15,7 @@ jobs:
           version: 20.10.7
       - run:
           name: Build Frontend Docker Image
-          command: docker build -t frontend:latest ./front-end
+          command: docker build -t frontend:latest ./frontend
       - run:
           name: Build Backend Docker Image
           command: docker build -t backend:latest ./smart_contracts
@@ -34,9 +34,39 @@ jobs:
             docker tag backend:latest $DOCKERHUB_USERNAME/backend:latest
             docker push $DOCKERHUB_USERNAME/backend:latest
 
+  deploy:
+    docker:
+      - image: circleci/python:3.8
+    steps:
+      - checkout
+      - run:
+          name: Install Kubectl
+          command: |
+            curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+            chmod +x ./kubectl
+            sudo mv ./kubectl /usr/local/bin/kubectl
+      - run:
+          name: Install AWS CLI
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+      - run:
+          name: Configure Kubectl
+          command: |
+            aws eks --region $AWS_REGION update-kubeconfig --name $EKS_CLUSTER_NAME
+      - run:
+          name: Install Ansible
+          command: sudo apt-get update && sudo apt-get install -y ansible
+      - run:
+          name: Deploy to Kubernetes
+          command: ansible-playbook deploy.yaml
+
 workflows:
   version: 2
-  build_and_push:
+  build_and_deploy:
     jobs:
       - build:
-          context: dockerhub-context
+      - deploy:
+          requires:
+            - build
