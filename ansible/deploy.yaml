@@ -1,25 +1,13 @@
----
-- name: Deploy to Kubernetes
-  hosts: localhost
+- hosts: localhost
   tasks:
-    - name: Create frontend deployment
+    - name: Deploy Frontend to Kubernetes
       kubernetes.core.k8s:
-        api_version: apps/v1
-        kind: Deployment
-        metadata:
-          name: frontend
-        spec:
-          replicas: 1
-          selector:
-            matchLabels:
-              app: frontend
-          template:
-            metadata:
-              labels:
-                app: frontend
-            spec:
-              containers:
-                - name: frontend
-                  image: <your_dockerhub_username>/frontend:latest
-                  ports:
-                    - containerPort: 3000
+        kubeconfig: "{{ lookup('env', 'KUBECONFIG') }}"
+        state: present
+        definition: "{{ lookup('file', 'k8s/frontend-deployment.yaml') }}"
+
+    - name: Deploy Backend to Kubernetes
+      kubernetes.core.k8s:
+        kubeconfig: "{{ lookup('env', 'KUBECONFIG') }}"
+        state: present
+        definition: "{{ lookup('file', 'k8s/backend-deployment.yaml') }}"
