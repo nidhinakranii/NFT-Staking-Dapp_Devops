@@ -1,4 +1,5 @@
-name: Deploy to Kubernetes
+---
+- name: Deploy to Kubernetes
   hosts: localhost
   tasks:
     - name: Create frontend deployment
@@ -22,7 +23,7 @@ name: Deploy to Kubernetes
               spec:
                 containers:
                   - name: frontend
-                    image: your-dockerhub-username/frontend:latest
+                    image: nidhinakrani/frontend:latest
                     ports:
                       - containerPort: 3000
 
@@ -47,7 +48,7 @@ name: Deploy to Kubernetes
               spec:
                 containers:
                   - name: backend
-                    image: your-dockerhub-username/backend:latest
+                    image: nidhinakrani/backend:latest
                     env:
                       - name: SEPOLIA_RPC_URL
-                        value: "https://eth-sepolia.g.alchemy.com/v2/your-api-key"
+                        value: "https://eth-sepolia.g.alchemy.com/v2/AIjeurCVedrZLU2sSeJSrrsV_sC975tW"
