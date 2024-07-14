@@ -1,19 +1,19 @@
 - hosts: localhost
   collections:
-    - community.kubernetes  # Use the compatible Kubernetes collection
+    - kubernetes  # Use the updated Kubernetes collection
 
   tasks:
     - name: Gathering Facts
       ansible.builtin.setup:
 
     - name: Deploy Frontend to Kubernetes
-      community.kubernetes.k8s:
+      kubernetes.k8s:
         kubeconfig: "{{ lookup('env', 'KUBECONFIG') }}"
         state: present
-        definition: "{{ lookup('file', '../k8s/frontend-deployment.yaml') }}"
+        definition: "{{ lookup('file', './k8s/frontend-deployment.yaml') }}"
 
     - name: Deploy Backend to Kubernetes
-      community.kubernetes.k8s:
+      kubernetes.k8s:
         kubeconfig: "{{ lookup('env', 'KUBECONFIG') }}"
         state: present
-        definition: "{{ lookup('file', '../k8s/backend-deployment.yaml') }}"
+        definition: "{{ lookup('file', './k8s/backend-deployment.yaml') }}"
