@@ -21,9 +21,9 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
  */
 
 const POLYGONSCAN_API_KEY = process.env.POLYGONSCAN_API_KEY;
-const Sepolia_RPC_URL = process.env.Sepolia_RPC_URL;
+const Sepolia_RPC_URL = "https://eth-sepolia.g.alchemy.com/v2/AIjeurCVedrZLU2sSeJSrrsV_sC975tW";
 const MUMBAI_RPC_URL = process.env.MUMBAI_RPC_URL;
-const PRIVATE_KEY = "e071de58b7598c8e69ed3b274ab60d0c2a91a0d1337e905396a00676367c8618";
+const PRIVATE_KEY = "8c105d6f766052e234ea13f70c18819905c64b9a27daf0392580594f45842a94";
 
 module.exports = {
   solidity: {
