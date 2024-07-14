@@ -60,7 +60,7 @@ jobs:
           command: sudo apt-get update && sudo apt-get install -y ansible
       - run:
           name: Deploy to Kubernetes
-          command: ansible-playbook ansible/deploy.yaml
+          command: ansible-playbook -i ansible/inventory.yaml ansible/deploy.yaml
 
 workflows:
   version: 2
