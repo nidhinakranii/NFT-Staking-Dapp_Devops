@@ -34,7 +34,7 @@ jobs:
             docker tag backend:latest $DOCKERHUB_USERNAME/backend:latest
             docker push $DOCKERHUB_USERNAME/backend:latest
 
-  deploy:
+deploy:
     docker:
       - image: circleci/python:3.8
     steps:
@@ -46,8 +46,11 @@ jobs:
           name: Install Python pip
           command: sudo apt-get install -y python3-pip
       - run:
+          name: Upgrade Ansible
+          command: python3 -m pip install --upgrade ansible
+      - run:
           name: Install Kubernetes Python Client
-          command: pip3 install kubernetes
+          command: python3 -m pip install --upgrade pip && python3 -m pip install kubernetes
       - run:
           name: Install Kubectl
           command: |
@@ -65,10 +68,7 @@ jobs:
           command: |
             aws eks --region $AWS_REGION update-kubeconfig --name $EKS_CLUSTER_NAME
       - run:
-          name: Install Ansible
-          command: sudo apt-get update && sudo apt-get install -y ansible
-      - run:
-          name: Install Kubernetes Collection
+          name: Install Ansible Collections
           command: ansible-galaxy collection install kubernetes.core
       - run:
           name: Deploy to Kubernetes
