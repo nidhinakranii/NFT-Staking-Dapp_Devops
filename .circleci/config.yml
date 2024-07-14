@@ -40,12 +40,15 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Update Package List
+          command: sudo apt-get update
+    - run:
           name: Install Python pip
           command: sudo apt-get install -y python3-pip
-      - run:
+    - run:
           name: Install Kubernetes Python Client
           command: pip3 install kubernetes
-      - run:
+    - run:
           name: Install Kubectl
           command: |
             curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
