@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
-  namespace: default  # Add this line
+  namespace: default
   labels:
     app: backend
 spec:
