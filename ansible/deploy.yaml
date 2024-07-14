@@ -1,15 +1,19 @@
 - hosts: localhost
-  vars:
-    ansible_python_interpreter: "/mnt/d/NFT-Staking-Dapp_Devops/venv/bin/python"
+  collections:
+    - community.kubernetes  # Use the compatible Kubernetes collection
+
   tasks:
+    - name: Gathering Facts
+      ansible.builtin.setup:
+
     - name: Deploy Frontend to Kubernetes
-      kubernetes.core.k8s:
+      community.kubernetes.k8s:
         kubeconfig: "{{ lookup('env', 'KUBECONFIG') }}"
         state: present
         definition: "{{ lookup('file', '../k8s/frontend-deployment.yaml') }}"
 
     - name: Deploy Backend to Kubernetes
-      kubernetes.core.k8s:
+      community.kubernetes.k8s:
         kubeconfig: "{{ lookup('env', 'KUBECONFIG') }}"
         state: present
         definition: "{{ lookup('file', '../k8s/backend-deployment.yaml') }}"

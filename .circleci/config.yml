@@ -46,12 +46,12 @@ jobs:
           name: Install Python pip
           command: sudo apt-get install -y python3-pip
       - run:
-          name: Setup Virtual Environment
+          name: Setup Virtual Environment and Install Dependencies
           command: |
             python3 -m venv venv
             source venv/bin/activate
             python3 -m pip install --upgrade pip
-            python3 -m pip install ansible kubernetes
+            python3 -m pip install ansible kubernetes community.kubernetes
       - run:
           name: Install Kubectl
           command: |
@@ -68,11 +68,6 @@ jobs:
           name: Configure Kubectl
           command: |
             aws eks --region $AWS_REGION update-kubeconfig --name $EKS_CLUSTER_NAME
-      - run:
-          name: Install Ansible Collections
-          command: |
-            source venv/bin/activate
-            ansible-galaxy collection install kubernetes.core
       - run:
           name: Deploy to Kubernetes
           command: |
