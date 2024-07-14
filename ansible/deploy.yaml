@@ -7,13 +7,13 @@
       ansible.builtin.setup:
 
     - name: Deploy Frontend to Kubernetes
-      kubernetes.k8s:
+      kubernetes.core.k8s:
         kubeconfig: "{{ lookup('env', 'KUBECONFIG') }}"
         state: present
         definition: "{{ lookup('file', './k8s/frontend-deployment.yaml') }}"
 
     - name: Deploy Backend to Kubernetes
-      kubernetes.k8s:
+      kubernetes.core.k8s:
         kubeconfig: "{{ lookup('env', 'KUBECONFIG') }}"
         state: present
         definition: "{{ lookup('file', './k8s/backend-deployment.yaml') }}"
