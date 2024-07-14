@@ -34,7 +34,7 @@ jobs:
             docker tag backend:latest $DOCKERHUB_USERNAME/backend:latest
             docker push $DOCKERHUB_USERNAME/backend:latest
 
-deploy:
+  deploy:
     docker:
       - image: circleci/python:3.8
     steps:
