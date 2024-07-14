@@ -3,6 +3,12 @@
     - kubernetes.core
 
   tasks:
+    - name: Ensure kubernetes library is installed
+      pip:
+        name: kubernetes
+        state: present
+        virtualenv: "/home/circleci/project/venv"
+
     - name: Gathering Facts
       ansible.builtin.setup:
 
