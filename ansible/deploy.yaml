@@ -1,0 +1,53 @@
+name: Deploy to Kubernetes
+  hosts: localhost
+  tasks:
+    - name: Create frontend deployment
+      kubernetes.core.k8s:
+        state: present
+        namespace: default
+        definition:
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: frontend
+          spec:
+            replicas: 2
+            selector:
+              matchLabels:
+                app: frontend
+            template:
+              metadata:
+                labels:
+                  app: frontend
+              spec:
+                containers:
+                  - name: frontend
+                    image: your-dockerhub-username/frontend:latest
+                    ports:
+                      - containerPort: 3000
+
+    - name: Create backend deployment
+      kubernetes.core.k8s:
+        state: present
+        namespace: default
+        definition:
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: backend
+          spec:
+            replicas: 2
+            selector:
+              matchLabels:
+                app: backend
+            template:
+              metadata:
+                labels:
+                  app: backend
+              spec:
+                containers:
+                  - name: backend
+                    image: your-dockerhub-username/backend:latest
+                    env:
+                      - name: SEPOLIA_RPC_URL
+                        value: "https://eth-sepolia.g.alchemy.com/v2/your-api-key"
