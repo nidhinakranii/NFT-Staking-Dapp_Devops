@@ -37,7 +37,7 @@ jobs:
 
   test:
     docker:
-      - image: circleci/node:16  # Updated Node.js version
+      - image: circleci/node:18-alpine3.19
     steps:
       - checkout
       - run:
