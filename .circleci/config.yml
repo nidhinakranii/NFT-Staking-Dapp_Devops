@@ -34,7 +34,7 @@ jobs:
           command: |
             docker tag backend:latest $DOCKERHUB_USERNAME/backend:latest
             docker push $DOCKERHUB_USERNAME/backend:latest
-  
+
   test:
     docker:
       - image: circleci/node:14
@@ -94,7 +94,7 @@ workflows:
           context: dockerhub-context
       - test:
           requires:
-            - deploy_hardhat
+            - build
       - deploy_kubernetes:
           requires:
-            - deploy_lycanchain
+            - test
