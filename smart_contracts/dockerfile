@@ -1,21 +1,17 @@
-# Use Node.js version 18 as base image
-FROM node:18
+FROM node:18-alpine3.19
 
-# Set working directory inside the container
+# Set the working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json to the working directory
-COPY package.json package-lock.json ./
-
-# Install dependencies
+# Copy package.json and install dependencies
+COPY package.json ./
 RUN npm install
 
-# Copy the rest of the application code to the working directory
+# Copy the rest of the application code
 COPY . .
 
-# Set environment variables for deployment
-ENV SEPOLIA_RPC_URL="https://eth-sepolia.g.alchemy.com/v2/AIjeurCVedrZLU2sSeJSrrsV_sC975tW"
-ENV PRIVATE_KEY="8c105d6f766052e234ea13f70c18819905c64b9a27daf0392580594f45842a94"
+# Compile the contracts
+RUN npx hardhat compile
 
-# Command to deploy contracts to Sepolia network
-CMD ["npx", "hardhat", "run", "scripts/deploy-vault.js", "--network", "sepolia"]
+# Set the entry point for the application
+CMD ["node", "scripts/deploy-vault.js"]
