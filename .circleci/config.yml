@@ -34,16 +34,7 @@ jobs:
           command: |
             docker tag backend:latest $DOCKERHUB_USERNAME/backend:latest
             docker push $DOCKERHUB_USERNAME/backend:latest
-
-  deploy_hardhat:
-    docker:
-      - image: circleci/node:14
-    steps:
-      - checkout
-      - run:
-          name: Deploy to Hardhat
-          command: npx hardhat run scripts/deploy.js --network hardhat
-
+  
   test:
     docker:
       - image: circleci/node:14
@@ -52,15 +43,6 @@ jobs:
       - run:
           name: Run Hardhat Tests
           command: npx hardhat test
-
-  deploy_lycanchain:
-    docker:
-      - image: circleci/node:14
-    steps:
-      - checkout
-      - run:
-          name: Deploy to LycanChain
-          command: npx hardhat run scripts/deploy.js --network lycanchain
 
   deploy_kubernetes:
     docker:
@@ -110,15 +92,9 @@ workflows:
     jobs:
       - build:
           context: dockerhub-context
-      - deploy_hardhat:
-          requires:
-            - build
       - test:
           requires:
             - deploy_hardhat
-      - deploy_lycanchain:
-          requires:
-            - test
       - deploy_kubernetes:
           requires:
             - deploy_lycanchain
