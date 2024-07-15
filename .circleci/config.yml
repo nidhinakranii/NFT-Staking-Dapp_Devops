@@ -8,7 +8,7 @@ executors:
 jobs:
   build:
     docker:
-      - image: circleci/node:14
+      - image: circleci/node:16  # Updated Node.js version
     steps:
       - checkout
       - setup_remote_docker:
@@ -37,12 +37,17 @@ jobs:
 
   test:
     docker:
-      - image: circleci/node:14
+      - image: circleci/node:16  # Updated Node.js version
     steps:
       - checkout
       - run:
+          name: Install Dependencies
+          command: npm install
+      - run:
           name: Run Hardhat Tests
-          command: npx hardhat test
+          command: |
+            cd smart_contracts  # Change directory to where the Hardhat project is located
+            npx hardhat test
 
   deploy_kubernetes:
     docker:
