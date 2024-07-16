@@ -20,8 +20,5 @@ RUN yarn --cwd front-end install
 # Copy the rest of the application code
 COPY . .
 
-# Change to the smart_contracts directory and compile the contracts
-RUN npx --cwd smart_contracts hardhat compile
-
 # Set the entry point for the application
 CMD ["node", "smart_contracts/scripts/deploy.js"]
