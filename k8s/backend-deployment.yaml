@@ -17,6 +17,6 @@ spec:
     spec:
       containers:
         - name: backend
-          image: $DOCKERHUB_USERNAME/backend:latest 
+          image: nidhinakrani/backend:latest 
           ports:
             - containerPort: 4000
