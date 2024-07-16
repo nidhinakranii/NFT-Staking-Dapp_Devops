@@ -1,4 +1,4 @@
-require("dotenv").config();
+// require("dotenv").config();
 require("@nomiclabs/hardhat-etherscan");
 require("@nomicfoundation/hardhat-chai-matchers");
 require("hardhat-gas-reporter");
@@ -20,8 +20,10 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
  * @type import('hardhat/config').HardhatUserConfig
  */
 
-const LYCAN_RPC_URL = "https://rpc-beta.lycanchain.com/";
-const PRIVATE_KEY = "8c105d6f766052e234ea13f70c18819905c64b9a27daf0392580594f45842a94";
+const SEPOLIA_RPC_URL =
+  "https://eth-sepolia.g.alchemy.com/v2/AIjeurCVedrZLU2sSeJSrrsV_sC975tW";
+const PRIVATE_KEY =
+  "0x8c105d6f766052e234ea13f70c18819905c64b9a27daf0392580594f45842a94";
 
 module.exports = {
   solidity: {
@@ -40,11 +42,12 @@ module.exports = {
     //   url: "http://127.0.0.1:7545",
     //   accounts: [PRIVATE_KEY],
     // },
-    lycanchain: {
-      url: LYCAN_RPC_URL,
-      accounts: [PRIVATE_KEY],
-      chainId: 4321,
+    sepolia: {
+        url: SEPOLIA_RPC_URL,
+        accounts: [PRIVATE_KEY],
+        chainId: 11155111,
     },
+
     // polygon: {
     //   url: POLYGON_RPC_URL,
     //   accounts: [process.env.PRIVATE_KEY],
