@@ -3,16 +3,16 @@ version: 2.1
 executors:
   docker-executor:
     docker:
-      - image: circleci/node:18
+      - image: circleci/node:latest
 
 jobs:
   build:
     docker:
-      - image: circleci/node:18-alpine
+      - image: circleci/node:latest
     steps:
       - checkout
       - setup_remote_docker:
-          version: 20.10.7
+          version: 20.10.24
           docker_layer_caching: true
       - run:
           name: Build Combined Docker Image
