@@ -207,6 +207,7 @@ function MintPage() {
                 <div className="roadmap-container"  >
                     <div className='info-container'>
                         <h3 className='text-center p-2'>Minting Info</h3>
+                        <h3>{stakingContractAddress}</h3>
                         <Table responsive>
                             <tbody>
                                 <tr>

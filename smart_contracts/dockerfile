@@ -27,4 +27,4 @@ RUN git config --global user.email "nidhinakranii@gmail.com" && \
 RUN npx hardhat compile
 
 # Set the entry point for the application
-CMD ["node", "scripts/deploy-vault.js"]
+CMD ["yarn", "deploy", "--network", "ganache"]

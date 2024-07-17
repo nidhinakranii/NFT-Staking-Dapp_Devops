@@ -19,32 +19,39 @@ async function main() {
   // Remove existing config if present
   const contractsConfigPath = "./contracts-config.js";
   if (fs.existsSync(contractsConfigPath)) {
+    console.log("Removing existing contracts-config.js...");
     fs.unlinkSync(contractsConfigPath);
   }
 
   // Deploy new contracts
+  console.log("Deploying KryptoPunks NFT contract...");
   const NFTContract = await ethers.getContractFactory("KryptoPunks");
   const nftContract = await NFTContract.deploy(maxSupply, mintCost, maxMintAmount);
   await nftContract.deployed();
+  console.log("KryptoPunks NFT contract deployed at:", nftContract.address);
 
+  console.log("Setting base URI...");
   await nftContract.setBaseURI(baseURI);
 
+  console.log("Deploying KryptoPunks ERC20 token contract...");
   const TokenContract = await ethers.getContractFactory("KryptoPunksToken");
   const tokenContract = await TokenContract.deploy();
   await tokenContract.deployed();
+  console.log("KryptoPunks ERC20 token contract deployed at:", tokenContract.address);
 
+  console.log("Deploying NFT Staking Vault...");
   const Vault = await ethers.getContractFactory("NFTStakingVault");
   const stakingVault = await Vault.deploy(nftContract.address, tokenContract.address);
   await stakingVault.deployed();
+  console.log("NFT Staking Vault deployed at:", stakingVault.address);
 
+  console.log("Setting token controller...");
   await tokenContract.setController(stakingVault.address, true);
 
-  console.log("KryptoPunks NFT contract deployed at:", nftContract.address);
-  console.log("KryptoPunks ERC20 token contract deployed at:", tokenContract.address);
-  console.log("NFT Staking Vault deployed at:", stakingVault.address);
   console.log("Network deployed to:", deployNetwork);
 
   // Write new contract addresses to config
+  console.log("Writing new contract addresses to config...");
   fs.writeFileSync(contractsConfigPath, `
     export const stakingContractAddress = "${stakingVault.address}";
     export const nftContractAddress = "${nftContract.address}";
@@ -58,7 +65,7 @@ async function main() {
   if (GITHUB_TOKEN) {
     console.log("Pushing contracts-config.js to GitHub...");
     const git = simpleGit();
-    
+
     // Clone or pull the repository
     const repoPath = 'kryptopunks-config';
     if (!fs.existsSync(repoPath)) {
@@ -70,6 +77,7 @@ async function main() {
     }
 
     // Copy and push the new config
+    console.log("Copying contracts-config.js to the repository...");
     await fse.copySync(contractsConfigPath, `${repoPath}/contracts-config.js`);
     await git.cwd(repoPath);
     await git.add('contracts-config.js');

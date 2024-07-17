@@ -1,11 +1,11 @@
-# Use the official Node.js 16 image as a base
-FROM node:16
+# Use the official Node.js 18-alpine image as a base
+FROM node:18-alpine
 
 # Set the working directory inside the container
 WORKDIR /app
 
 # Install git
-RUN apt-get update && apt-get install -y git
+RUN apk update && apk add --no-cache git
 
 # Clone the repository (only fetch the specific file)
 RUN git clone --depth 1 https://github.com/nidhinakranii/kryptopunks_config.git

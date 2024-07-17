@@ -1,0 +1,17 @@
+version: '3'
+services:
+  ganache:
+    image: trufflesuite/ganache-cli:latest
+    ports:
+      - "8545:8545"
+    command: ["-h", "0.0.0.0", "-a", "10", "-m", "kick aunt absurd media measure velvet note nose prize verb wash essence", "--chainId", "5777"]
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - ganache
+    ports:
+      - "3000:3000"
+    command: ["sh", "-c", "while ! nc -z ganache 8545; do sleep 1; done && yarn deploy --network ganache"]
