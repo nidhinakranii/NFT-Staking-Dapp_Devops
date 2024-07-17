@@ -1,0 +1,31 @@
+version: '3'
+services:
+  ganache:
+    image: trufflesuite/ganache-cli:latest
+    ports:
+      - "8545:8545"
+    command: ["-h", "0.0.0.0", "-a", "10", "-m", "kick aunt absurd media measure velvet note nose prize verb wash essence", "--chainId", "5777"]
+
+  backend:
+    build:
+      context: ./smart_contracts
+      dockerfile: dockerfile
+    depends_on:
+      - ganache
+    environment:
+      - NETWORK=ganache
+    volumes:
+      - ./smart_contracts:/app
+    command: ["sh", "-c", "while ! nc -z ganache 8545; do sleep 1; done && yarn deploy --network ganache"]
+
+  frontend:
+    build:
+      context: ./front-end
+      dockerfile: dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    volumes:
+      - ./front-end:/app
+    command: yarn start

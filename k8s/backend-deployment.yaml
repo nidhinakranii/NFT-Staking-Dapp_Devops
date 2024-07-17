@@ -21,7 +21,57 @@ spec:
           ports:
             - containerPort: 4000
           env:
-            - name: SEPOLIA_RPC_URL
-              value: "https://eth-sepolia.g.alchemy.com/v2/AIjeurCVedrZLU2sSeJSrrsV_sC975tW"
+            - name: GANACHE_RPC_URL
+              value: "http://ganache:8545"
             - name: PRIVATE_KEY
               value: "0x8c105d6f766052e234ea13f70c18819905c64b9a27daf0392580594f45842a94"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ganache
+  namespace: default
+  labels:
+    app: ganache
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ganache
+  template:
+    metadata:
+      labels:
+        app: ganache
+    spec:
+      containers:
+        - name: ganache
+          image: trufflesuite/ganache-cli:latest
+          ports:
+            - containerPort: 8545
+          command: ["ganache-cli", "-h", "0.0.0.0", "-a", "10", "-m", "kick aunt absurd media measure velvet note nose prize verb wash essence", "--chainId", "5777"]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: default
+spec:
+  type: ClusterIP
+  ports:
+    - port: 4000
+      targetPort: 4000
+  selector:
+    app: backend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ganache
+  namespace: default
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8545
+      targetPort: 8545
+  selector:
+    app: ganache
