@@ -1,14 +1,27 @@
 FROM node:18-alpine
 
+# Install Git
+RUN apk update && apk add git
+
 # Set the working directory
 WORKDIR /app
 
-# Copy package.json and install dependencies
-COPY package.json ./
-RUN npm install
+# Copy package.json and yarn.lock, then install dependencies
+COPY package.json yarn.lock ./
+RUN yarn install
+
+# Install simple-git and dotenv
+RUN yarn add simple-git dotenv
 
 # Copy the rest of the application code
 COPY . .
+
+# Copy the .env file
+COPY .env .env
+
+# Set Git user configuration
+RUN git config --global user.email "nidhinakranii@gmail.com" && \
+    git config --global user.name "nidhinakranii"
 
 # Compile the contracts
 RUN npx hardhat compile

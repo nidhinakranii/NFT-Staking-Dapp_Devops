@@ -15,31 +15,34 @@ jobs:
           version: 20.10.24
           docker_layer_caching: true
       - run:
-          name: Build Combined Docker Image
-          command: docker build -t kryptopunks-nft-staking:latest . || exit 1
+          name: Build Frontend Docker Image
+          command: docker build -t frontend:latest . || exit 1
+      - run:
+          name: Build Backend Docker Image
+          command: docker build -t backend:latest . || exit 1
       - run:
           name: Login to Docker Hub
           command: |
             echo "$DOCKERHUB_PASSWORD" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin
       - run:
-          name: Push Docker Image
+          name: Push Frontend Image
           command: |
-            docker tag kryptopunks-nft-staking:latest $DOCKERHUB_USERNAME/kryptopunks-nft-staking:latest
-            docker push $DOCKERHUB_USERNAME/kryptopunks-nft-staking:latest
-
+            docker tag frontend:latest $DOCKERHUB_USERNAME/frontend:latest
+            docker push $DOCKERHUB_USERNAME/frontend:latest
+      - run:
+          name: Push Backend Image
+          command: |
+            docker tag backend:latest $DOCKERHUB_USERNAME/backend:latest
+            docker push $DOCKERHUB_USERNAME/backend:latest
+  
   test:
     docker:
       - image: circleci/node:latest
     steps:
       - checkout
       - run:
-          name: Install Dependencies
-          command: npm install
-      - run:
           name: Run Hardhat Tests
-          command: |
-            cd smart_contracts
-            npx hardhat test
+          command: npx hardhat test
 
   deploy_kubernetes:
     docker:
@@ -91,7 +94,7 @@ workflows:
           context: dockerhub-context
       - test:
           requires:
-            - build
+            - deploy_hardhat
       - deploy_kubernetes:
           requires:
-            - test
+            - deploy_lycanchain

@@ -1,20 +1,29 @@
-# Use the official Node.js 18 image as a base
+# Use the official Node.js 16 image as a base
 FROM node:16
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json to the working directory
-COPY package.json package-lock.json ./
+# Install git
+RUN apt-get update && apt-get install -y git
 
-# Clean npm cache and install dependencies using npm
-RUN npm cache clean --force && npm install
+# Clone the repository (only fetch the specific file)
+RUN git clone --depth 1 https://github.com/nidhinakranii/kryptopunks_config.git
+
+# Copy package.json and yarn.lock to the working directory
+COPY package.json yarn.lock ./
+
+# Clean npm cache and install dependencies using yarn
+RUN yarn cache clean --force && yarn install
 
 # Copy the rest of the application code to the working directory
 COPY . .
+
+# Copy the contracts-config.js from the cloned repository to the frontend utils directory
+RUN cp /app/kryptopunks_config/contracts-config.js ./src/utils/contracts-config.js
 
 # Expose port 3000 to allow outside access
 EXPOSE 3000
 
 # Start the application
-CMD ["npm", "start"]
+CMD ["yarn", "start"]
