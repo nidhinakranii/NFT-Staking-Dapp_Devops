@@ -90,11 +90,10 @@ workflows:
   version: 2
   build_and_deploy:
     jobs:
-      - build:
-          context: dockerhub-context
+      - build
       - test:
           requires:
-            - deploy_hardhat
+            - build
       - deploy_kubernetes:
           requires:
-            - deploy_lycanchain
+            - build
