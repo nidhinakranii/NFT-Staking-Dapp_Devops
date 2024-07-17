@@ -96,4 +96,4 @@ workflows:
             - build
       - deploy_kubernetes:
           requires:
-            - build
+            - test
