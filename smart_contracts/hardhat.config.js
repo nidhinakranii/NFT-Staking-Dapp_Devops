@@ -14,7 +14,6 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
  * @type import('hardhat/config').HardhatUserConfig
  */
 
-const SEPOLIA_RPC_URL = "https://eth-sepolia.g.alchemy.com/v2/AIjeurCVedrZLU2sSeJSrrsV_sC975tW";
 const PRIVATE_KEY = "0xcda8b9aafa26c568c6cd7e94d4bcf764acbf696bc72bbcb84ce49f95eca966fe";
 
 module.exports = {
@@ -27,7 +26,7 @@ module.exports = {
   },
   networks: {
     hardhat: {
-      chainId: 5777,
+      chainId: 1337,
     },
     ganache: {
       chainId: 5777,

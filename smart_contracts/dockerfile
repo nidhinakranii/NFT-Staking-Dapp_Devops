@@ -10,7 +10,8 @@ WORKDIR /app
 # Copy package.json and yarn.lock, then install dependencies
 COPY package.json yarn.lock ./
 RUN yarn add simple-git dotenv
-RUN yarn add --dev hardhat
+# RUN yarn add --dev hardhat
+RUN npm install --save-dev hardhat 
 RUN yarn install
 
 # Copy the rest of the application code
@@ -24,4 +25,4 @@ RUN yarn hardhat compile
 # RUN yarn hardhat run scripts/deploy-vault.js --network ganache
 
 # Set the entry point for the application
-CMD ["sh", "-c", "while ! nc -z ganache 8545; do sleep 1; done && git config --global user.email nidhinakranii@gmail.com && git config --global user.name nidhinakranii &&git config --global --add safe.directory /app/kryptopunks-config && yarn hardhat run scripts/deploy-vault.js --network ganache"]
+CMD ["sh", "-c", "while ! nc -z ganache 8545; do sleep 1; done && git config --global user.email nidhinakranii@gmail.com && git config --global user.name nidhinakranii && git config --global --add safe.directory /app/kryptopunks-config && yarn hardhat run scripts/deploy-vault.js --network ganache"]
