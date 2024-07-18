@@ -14,17 +14,11 @@ jobs:
           version: 20.10.24
           docker_layer_caching: true
       - run:
-          name: Install `docker-compose`
-          command: |
-            curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
-            chmod +x ~/docker-compose
-            sudo mv ~/docker-compose /usr/local/bin/docker-compose
-      - run:
           name: Log in to Docker Hub
           command: echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
       - run:
           name: Build and Run Docker Compose
-          command: docker-compose -f docker-compose.yml up --build
+          command: docker-compose -f docker-compose.yml build
       - run:
           name: Push Frontend Image
           command: docker tag frontend:latest "$DOCKERHUB_USERNAME/frontend:latest" && docker push "$DOCKERHUB_USERNAME/frontend:latest"
