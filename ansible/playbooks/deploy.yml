@@ -19,12 +19,10 @@
     #     var: kubeconfig_content.stdout
     - name: Deploy Ganache
       k8s:
-        kubeconfig: ansible\kubeconfig.yml
         state: present
         src: k8s/ganache-deployment.yml
     - name: Deploy Backend
       k8s:
-        kubeconfig: ansible\kubeconfig.yml
         state: present
         src: k8s/backend-deployment.yml
     - name: Deploy Frontend
