@@ -13,16 +13,16 @@ RUN git clone --depth 1 https://github.com/nidhinakranii/kryptopunks_config.git
 COPY package.json yarn.lock ./
 
 # Clean npm cache and install dependencies using yarn
-RUN yarn cache clean --force && yarn install
+RUN yarn cache clean --force
+RUN yarn install --frozen-lockfile
+
 
 # Copy the rest of the application code to the working directory
-COPY . .
+COPY . ./
+
 
 # Copy the contracts-config.js from the cloned repository to the frontend utils directory
 RUN cp /app/kryptopunks_config/contracts-config.js ./src/utils/contracts-config.js
 
-# Expose port 3000 to allow outside access
-EXPOSE 3000
-
-# Start the application
 CMD ["yarn", "start"]
+

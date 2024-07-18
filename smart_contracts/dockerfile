@@ -1,19 +1,17 @@
+# Use a Node.js image as the base
 FROM node:18-alpine
 
-# Install GitFROM node:18-alpine
-
-# Install Git
-RUN apk update && apk add git
+# Install git and other dependencies
+RUN apk update && apk add git bash
 
 # Set the working directory
 WORKDIR /app
 
 # Copy package.json and yarn.lock, then install dependencies
 COPY package.json yarn.lock ./
-RUN yarn install
-
-# Install simple-git and dotenv
 RUN yarn add simple-git dotenv
+RUN yarn add --dev hardhat
+RUN yarn install
 
 # Copy the rest of the application code
 COPY . .
@@ -21,40 +19,9 @@ COPY . .
 # Copy the .env file
 COPY .env .env
 
-# Set Git user configuration
-RUN git config --global user.email "nidhinakranii@gmail.com" && \
-    git config --global user.name "nidhinakranii"
-
 # Compile the contracts
-RUN npx hardhat compile
+RUN yarn hardhat compile
+# RUN yarn hardhat run scripts/deploy-vault.js --network ganache
 
 # Set the entry point for the application
-CMD ["yarn", "deploy", "--network", "ganache"]
-
-RUN apk update && apk add git
-
-# Set the working directory
-WORKDIR /app
-
-# Copy package.json and yarn.lock, then install dependencies
-COPY package.json yarn.lock ./
-RUN yarn install
-
-# Install simple-git and dotenv
-RUN yarn add simple-git dotenv
-
-# Copy the rest of the application code
-COPY . .
-
-# Copy the .env file
-COPY .env .env
-
-# Set Git user configuration
-RUN git config --global user.email "nidhinakranii@gmail.com" && \
-    git config --global user.name "nidhinakranii"
-
-# Compile the contracts
-RUN npx hardhat compile
-
-# Set the entry point for the application
-CMD ["yarn", "deploy", "--network", "ganache"]
+CMD ["sh", "-c", "while ! nc -z ganache 8545; do sleep 1; done && git config --global user.email nidhinakranii@gmail.com && git config --global user.name nidhinakranii &&git config --global --add safe.directory /app/kryptopunks-config && yarn hardhat run scripts/deploy-vault.js --network ganache"]

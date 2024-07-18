@@ -4,28 +4,26 @@ services:
     image: trufflesuite/ganache-cli:latest
     ports:
       - "8545:8545"
-    command: ["-h", "0.0.0.0", "-a", "10", "-m", "kick aunt absurd media measure velvet note nose prize verb wash essence", "--chainId", "5777"]
+    # command: ["-h", "0.0.0.0", "-a", "10", "-m", "kick aunt absurd media measure velvet note nose prize verb wash essence", "--chainId", "5777"]
 
-  backend:
+  hardhat:
     build:
       context: ./smart_contracts
       dockerfile: dockerfile
     depends_on:
       - ganache
-    environment:
-      - NETWORK=ganache
     volumes:
       - ./smart_contracts:/app
-    command: ["sh", "-c", "while ! nc -z ganache 8545; do sleep 1; done && yarn deploy --network ganache"]
+    # command:  ["sh", "-c", "yarn install && RUN yarn add --dev hardhat && npx hardhat run scripts/deploy-vault.js --network ganache"]
 
   frontend:
     build:
       context: ./front-end
       dockerfile: dockerfile
     ports:
-      - "3000:3000"
-    depends_on:
-      - backend
-    volumes:
-      - ./front-end:/app
-    command: yarn start
+      - "3003:3000"
+    # depends_on:
+    #   - hardhat
+    # volumes:
+    #   - ./front-end:/app
+    # command: ["sh", "-c", "yarn install"]

@@ -27,7 +27,7 @@ module.exports = {
   },
   networks: {
     hardhat: {
-      chainId: 1337,
+      chainId: 5777,
     },
     ganache: {
       chainId: 5777,
