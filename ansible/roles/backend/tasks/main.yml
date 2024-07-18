@@ -1,6 +1,6 @@
 ---
 - name: Apply backend Kubernetes deployment
   k8s:
-    kubeconfig: /mnt/d/NFT-Staking-Dapp_Devops/ansible/kubeconfig
+    kubeconfig: ansible/kubeconfig
     state: present
     src: k8s/backend-deployment.yml
