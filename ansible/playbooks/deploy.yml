@@ -15,7 +15,7 @@
 
     - name: Deploy Ganache
       k8s:
-        kubeconfig: ~/.kube/config
+        kubeconfig: /home/nidhi/.kube/config
         state: present
         src: k8s/ganache-deployment.yml
 
