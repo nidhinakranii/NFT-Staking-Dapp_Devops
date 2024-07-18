@@ -29,6 +29,6 @@
         src: k8s/backend-deployment.yml
     - name: Deploy Frontend
       k8s:
-        kubeconfig: ansible/kubeconfig
+        
         state: present
         src: k8s/frontend-deployment.yml

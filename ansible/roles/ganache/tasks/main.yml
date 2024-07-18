@@ -1,6 +1,6 @@
 ---
 - name: Apply Ganache Kubernetes deployment
   k8s:
-    kubeconfig: ansible/kubeconfig
+    
     state: present
     src: k8s/ganache-deployment.yml
