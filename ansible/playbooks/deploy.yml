@@ -36,7 +36,7 @@
         aws configure set region "{{ lookup('env', 'AWS_REGION') }}"
 
     - name: Update kubeconfig for EKS cluster
-      command: aws eks update-kubeconfig --name {{ eks_cluster_name }}
+      command: aws eks update-kubeconfig --name {{ nftstaking-cluster }}
 
     - name: Deploy Ganache
       k8s:
