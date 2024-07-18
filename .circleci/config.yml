@@ -16,14 +16,14 @@ jobs:
       - run:
           name: Build Docker Images
           command: |
-            docker build -t nft-backend ./smart_contracts
-            docker build -t nft-frontend ./front-end
+            docker build -t $DOCKERHUB_USERNAME/nft-backend ./smart_contracts
+            docker build -t $DOCKERHUB_USERNAME/nft-frontend ./front-end
       - run:
           name: Push Docker Images
           command: |
-            docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
-            docker push nft-backend
-            docker push nft-frontend
+            echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin
+            docker push $DOCKERHUB_USERNAME/nft-backend
+            docker push $DOCKERHUB_USERNAME/nft-frontend
     context:
       - dockerhub-context
 
