@@ -117,19 +117,24 @@ executors:
     working_directory: ~/repo
 
 jobs:
-  build:
+  build-and-deploy:
     executor: docker-executor
     steps:
       - checkout
 
-      # Install Docker
+      # Install Ansible
+      - run:
+          name: Install Ansible
+          command: |
+            pip install ansible
+
+      # Install Docker and Docker Compose
       - run:
           name: Install Docker
           command: |
-            sudo apt-get update
-            sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+            curl -fsSL https://get.docker.com -o get-docker.sh
+            sh get-docker.sh
 
-      # Install Docker Compose
       - run:
           name: Install Docker Compose
           command: |
