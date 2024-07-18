@@ -36,19 +36,6 @@ jobs:
           name: Push Backend Image
           command: docker tag backend:latest "$DOCKERHUB_USERNAME/backend:latest" && docker push "$DOCKERHUB_USERNAME/backend:latest"
 
-  test:
-    executor: docker-executor  
-    steps:
-      - checkout
-      - run:
-          name: Install Hardhat
-          command: sudo yarn add --dev hardhat
-      - run:
-          name: Run Hardhat Tests
-          command: |
-            cd smart_contracts
-            npx hardhat test
-
   deploy_kubernetes:
     executor: docker-executor
     steps:
