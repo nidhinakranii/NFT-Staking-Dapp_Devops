@@ -117,7 +117,7 @@ executors:
     working_directory: ~/repo
 
 jobs:
-  build-and-deploy:
+  build:
     executor: docker-executor
     steps:
       - checkout
