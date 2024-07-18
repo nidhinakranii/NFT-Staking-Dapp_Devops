@@ -1,88 +1,166 @@
+# version: 2.1
+
+# executors:
+#   docker-executor:
+#     docker:
+#       - image: circleci/node:latest
+
+# jobs:
+#   build:
+#     executor: docker-executor
+#     steps:
+#       - checkout
+#       - setup_remote_docker:
+#           version: 20.10.24
+#           docker_layer_caching: true
+#       - run:
+#           name: Log in to Docker Hub
+#           command: echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+#       - run:
+#           name: Build and Run Docker Compose
+#           command: docker-compose -f docker-compose.yml build
+#       - run:
+#           name: Install Kompose
+#           command: |
+#             curl -L https://github.com/kubernetes/kompose/releases/download/v1.34.0/kompose-linux-amd64 -o kompose
+#             chmod +x kompose
+#             sudo mv ./kompose /usr/local/bin/kompose
+#       - run:
+#           name: Convert Docker Compose to Kubernetes Manifests
+#           command: kompose convert
+#       - run:
+#           name: Build Frontend Docker Image
+#           command: |
+#             cd front-end
+#             docker build -t frontend:latest .
+#       - run:
+#           name: Build Backend Docker Image
+#           command: |
+#             cd smart_contracts
+#             docker build -t backend:latest .
+#       - run:
+#           name: Push Frontend Image
+#           command: docker tag frontend:latest "$DOCKERHUB_USERNAME/frontend:latest" && docker push "$DOCKERHUB_USERNAME/frontend:latest"
+#       - run:
+#           name: Push Backend Image
+#           command: docker tag backend:latest "$DOCKERHUB_USERNAME/backend:latest" && docker push "$DOCKERHUB_USERNAME/backend:latest"
+#       - persist_to_workspace:
+#           root: .
+#           paths:
+#             - . # Save the whole project directory including generated Kubernetes manifests
+
+#   deploy_kubernetes:
+#     executor: docker-executor
+#     steps:
+#       - checkout
+#       - attach_workspace:
+#           at: /workspace
+#       - run:
+#           name: Update Package List
+#           command: sudo apt-get update
+#       - run:
+#           name: Install Required Packages
+#           command: |
+#             sudo apt-get install -y python3-pip python3-venv
+#       - run:
+#           name: Setup Virtual Environment and Install Dependencies
+#           command: |
+#             python3 -m venv venv
+#             source venv/bin/activate
+#             python3 -m pip install --upgrade pip
+#             python3 -m pip install ansible
+#             ansible-galaxy collection install kubernetes.core
+#       - run:
+#           name: Install Kubectl
+#           command: |
+#             curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+#             chmod +x ./kubectl
+#             sudo mv ./kubectl /usr/local/bin/kubectl
+#       - run:
+#           name: Install AWS CLI
+#           command: |
+#             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+#             unzip -o awscliv2.zip
+#             sudo ./aws/install
+#       - run:
+#           name: Configure Kubectl
+#           command: |
+#             aws eks --region "$AWS_REGION" update-kubeconfig --name "$EKS_CLUSTER_NAME"
+#       # - run:
+#       #     name: Deploy to Kubernetes
+#       #     command: |
+#       #       source venv/bin/activate
+#       #       ansible-playbook -i ansible/inventory.yaml ansible/deploy.yaml
+#       - run:
+#           name: Apply Kubernetes Manifests
+#           command: |
+#             kubectl apply -f /workspace/*.yaml
+
+# workflows:
+#   version: 2
+#   build_and_deploy:
+#     jobs:
+#       - build:
+#           context: dockerhub-context  
+#       - deploy_kubernetes:
+#           requires:
+#             - build
+#           context: dockerhub-context
+
+
 version: 2.1
 
 executors:
   docker-executor:
     docker:
-      - image: circleci/node:latest
+      - image: circleci/python:3.8
+    working_directory: ~/repo
 
 jobs:
   build:
     executor: docker-executor
     steps:
       - checkout
-      - setup_remote_docker:
-          version: 20.10.24
-          docker_layer_caching: true
-      - run:
-          name: Log in to Docker Hub
-          command: echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-      - run:
-          name: Build and Run Docker Compose
-          command: docker-compose -f docker-compose.yml build
-      - run:
-          name: Build Frontend Docker Image
-          command: |
-            cd front-end
-            docker build -t frontend:latest .
-      - run:
-          name: Build Backend Docker Image
-          command: |
-            cd smart_contracts
-            docker build -t backend:latest .
-      - run:
-          name: Push Frontend Image
-          command: docker tag frontend:latest "$DOCKERHUB_USERNAME/frontend:latest" && docker push "$DOCKERHUB_USERNAME/frontend:latest"
-      - run:
-          name: Push Backend Image
-          command: docker tag backend:latest "$DOCKERHUB_USERNAME/backend:latest" && docker push "$DOCKERHUB_USERNAME/backend:latest"
 
-  deploy_kubernetes:
-    executor: docker-executor
-    steps:
-      - checkout
+      # Install Ansible
       - run:
-          name: Update Package List
-          command: sudo apt-get update
-      - run:
-          name: Install Required Packages
+          name: Install Ansible
           command: |
-            sudo apt-get install -y python3-pip python3-venv
+            pip install ansible
+
+      # Install Docker and Docker Compose
       - run:
-          name: Setup Virtual Environment and Install Dependencies
+          name: Install Docker
           command: |
-            python3 -m venv venv
-            source venv/bin/activate
-            python3 -m pip install --upgrade pip
-            python3 -m pip install ansible
-            ansible-galaxy collection install kubernetes.core
+            curl -fsSL https://get.docker.com -o get-docker.sh
+            sh get-docker.sh
+
       - run:
-          name: Install Kubectl
+          name: Install Docker Compose
           command: |
-            curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
-            chmod +x ./kubectl
-            sudo mv ./kubectl /usr/local/bin/kubectl
+            sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
+
+      # Build Docker images
       - run:
-          name: Install AWS CLI
+          name: Build Docker images
           command: |
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip -o awscliv2.zip
-            sudo ./aws/install
+            docker-compose -f docker-compose.yml build
+
+      # Push Docker images
       - run:
-          name: Configure Kubectl
+          name: Push Docker images
           command: |
-            aws eks --region "$AWS_REGION" update-kubeconfig --name "$EKS_CLUSTER_NAME"
+            docker-compose -f docker-compose.yml push
+
+      # Deploy to Kubernetes with Ansible
       - run:
-          name: Deploy to Kubernetes
+          name: Deploy with Ansible
           command: |
-            source venv/bin/activate
-            ansible-playbook -i ansible/inventory.yaml ansible/deploy.yaml
+            ansible-playbook -i ansible/inventory/hosts ansible/playbooks/deploy.yml
 
 workflows:
   version: 2
-  build_and_deploy:
+  build:
     jobs:
-      - build:
-          context: dockerhub-context  
-      - deploy_kubernetes:
-          requires:
-            - build
+      - build

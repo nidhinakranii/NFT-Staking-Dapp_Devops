@@ -1,0 +1,6 @@
+---
+- name: Apply frontend Kubernetes deployment
+  k8s:
+    kubeconfig: /path/to/your/kubeconfig
+    state: present
+    src: k8s/frontend-deployment.yml

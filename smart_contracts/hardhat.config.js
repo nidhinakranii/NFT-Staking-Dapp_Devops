@@ -14,7 +14,8 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
  * @type import('hardhat/config').HardhatUserConfig
  */
 
-const PRIVATE_KEY = "0xcda8b9aafa26c568c6cd7e94d4bcf764acbf696bc72bbcb84ce49f95eca966fe";
+const PRIVATE_KEY =
+  "0xcda8b9aafa26c568c6cd7e94d4bcf764acbf696bc72bbcb84ce49f95eca966fe";
 
 module.exports = {
   solidity: {
@@ -25,13 +26,9 @@ module.exports = {
     ],
   },
   networks: {
-    hardhat: {
-      chainId: 1337,
-    },
     ganache: {
-      chainId: 5777,
       url: "http://ganache:8545",
-      accounts: [PRIVATE_KEY],
+      // accounts: [PRIVATE_KEY],
     },
   },
   paths: {

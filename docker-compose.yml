@@ -1,31 +1,43 @@
-version: '3'
+version: '3.8'
+
 services:
   ganache:
     image: trufflesuite/ganache-cli:latest
     ports:
       - "8545:8545"
-    # command: ["-h", "0.0.0.0", "-a", "10", "-m", "kick aunt absurd media measure velvet note nose prize verb wash essence", "--chainId", "5777"]
+    networks:
+      - ganache-net
+    command: ["--networkId", "5777", "--port", "8545", "--hostname", "0.0.0.0", "--deterministic"]
 
-  hardhat:
+  backend:
     build:
       context: ./smart_contracts
-      dockerfile: dockerfile
+      dockerfile: dockerfile  # Ensure this matches the name of your Dockerfile for smart contracts
     depends_on:
       - ganache
-    volumes:
-      - ./smart_contracts:/app
     environment:
-      - GITHUB_TOKEN=${GITHUB_TOKEN}
-    command: ["sh", "-c", "while ! nc -z ganache 8545; do sleep 1; done && yarn hardhat run scripts/deploy-vault.js --network ganache"]
-  
+      - GITHUB_TOKEN=${GITHUB_TOKEN}  # Optional: Pass environment variables if needed
+    networks:
+      - ganache-net
+    command: ["yarn", "deploy"]  # Adjust this command based on your deployment script
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8545"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+
   frontend:
     build:
       context: ./front-end
-      dockerfile: dockerfile
+      dockerfile: dockerfile  # Ensure this matches the name of your Dockerfile for frontend
     ports:
-      - "3003:3000"
-    # depends_on:
-    #   - hardhat
-    # volumes:
-    #   - ./front-end:/app
-    # command: ["sh", "-c", "yarn install"]
+      - "3003:3000"  # Expose frontend port
+    # networks:
+    #   - ganache-net
+    command: ["yarn", "start"]  # Command to start the frontend application
+
+networks:
+  ganache-net:
+    driver: bridge

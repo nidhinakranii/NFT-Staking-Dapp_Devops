@@ -1,25 +1,51 @@
-# Use a Node.js image as the base
+# # Use a Node.js image as the base
+# FROM node:18-alpine
+
+# # Install git and other dependencies
+# RUN apk update && apk add git bash
+
+# # Set the working directory
+# WORKDIR /app
+
+# # Copy package.json and yarn.lock, then install dependencies
+# COPY package.json ./
+
+
+# # Install hardhat and other dev dependencies
+# RUN yarn add --dev hardhat
+
+# # Install additional dependencies (if needed)
+# RUN yarn add simple-git dotenv
+
+# RUN yarn install
+
+# # Copy the rest of the application code
+# COPY . .
+
+
+# # Set the entry point for the application
+# CMD ["sh", "-c", "git config --global user.email nidhinakranii@gmail.com && git config --global user.name nidhinakranii && git config --global --add safe.directory /app/kryptopunks-config && yarn deploy"]
+
+
+
+
+# Use Node.js 14 LTS as the base image
 FROM node:18-alpine
 
-# Install git and other dependencies
-RUN apk update && apk add git bash
-
-# Set the working directory
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy package.json and yarn.lock, then install dependencies
-COPY package.json yarn.lock ./
-RUN yarn add simple-git dotenv
-RUN yarn add --dev hardhat
-# RUN npm install --save-dev hardhat 
+# Copy package.json and package-lock.json to the working directory
+COPY package*.json ./
+
+# Install dependencies
 RUN yarn install
 
-# Copy the rest of the application code
+# Copy the rest of the application code to the working directory
 COPY . .
 
-# Compile the contracts
-RUN yarn hardhat compile
-# RUN yarn hardhat run scripts/deploy-vault.js --network ganache
+# Expose the necessary port for Ethereum (if needed)
+# EXPOSE 8545
 
-# Set the entry point for the application
-CMD ["sh", "-c", "git config --global user.email nidhinakranii@gmail.com && git config --global user.name nidhinakranii && git config --global --add safe.directory /app/kryptopunks-config && yarn hardhat run scripts/deploy-vault.js --network ganache"]
+# Specify the command to run your application, in this case, deploying smart contracts to Ganache
+CMD ["yarn", "run", "deploy"]
