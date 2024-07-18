@@ -14,8 +14,10 @@ services:
       - ganache
     volumes:
       - ./smart_contracts:/app
-    # command:  ["sh", "-c", "yarn install && RUN yarn add --dev hardhat && npx hardhat run scripts/deploy-vault.js --network ganache"]
-
+    environment:
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+    command: ["sh", "-c", "while ! nc -z ganache 8545; do sleep 1; done && yarn hardhat run scripts/deploy-vault.js --network ganache"]
+  
   frontend:
     build:
       context: ./front-end

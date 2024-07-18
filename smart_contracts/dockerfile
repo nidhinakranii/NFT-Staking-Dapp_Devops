@@ -10,8 +10,8 @@ WORKDIR /app
 # Copy package.json and yarn.lock, then install dependencies
 COPY package.json yarn.lock ./
 RUN yarn add simple-git dotenv
-# RUN yarn add --dev hardhat
-RUN npm install --save-dev hardhat 
+RUN yarn add --dev hardhat
+# RUN npm install --save-dev hardhat 
 RUN yarn install
 
 # Copy the rest of the application code
