@@ -11,9 +11,9 @@
       pip:
         name: kubernetes
         state: present
-    - name: Verify kubeconfig file
-      shell: cat ansible/kubeconfig
-      register: kubeconfig_content
+    # - name: Verify kubeconfig file
+    #   shell: cat ansible/kubeconfig
+    #   register: kubeconfig_content
     - name: Debug kubeconfig file content
       debug:
         var: kubeconfig_content.stdout
