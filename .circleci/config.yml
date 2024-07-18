@@ -42,7 +42,7 @@ jobs:
             aws configure set region $AWS_REGION
       - run:
           name: Run Ansible Playbook
-          command: ansible-playbook deploy.yml -i ansible/hosts
+          command: ansible-playbook ansible/playbooks/deploy.yml -i ansible/hosts
 
 workflows:
   version: 2
