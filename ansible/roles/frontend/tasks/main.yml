@@ -1,6 +1,6 @@
 ---
 - name: Apply frontend Kubernetes deployment
   k8s:
-    kubeconfig: /path/to/your/kubeconfig
+    kubeconfig: /mnt/d/NFT-Staking-Dapp_Devops/ansible/kubeconfig
     state: present
     src: k8s/frontend-deployment.yml
