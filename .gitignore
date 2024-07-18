@@ -22,8 +22,6 @@ smart_contracts/dist/
 smart_contracts/artifacts/
 smart_contracts/cache/
 
-# Environment variables
-*.env
 
 # OS specific files
 .DS_Store
