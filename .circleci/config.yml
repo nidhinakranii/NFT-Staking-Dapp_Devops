@@ -96,7 +96,7 @@ workflows:
   build_and_deploy:
     jobs:
       - build
-          context: dockerhub-context
+          context:dockerhub-context
       - test:
           requires:
             - build
