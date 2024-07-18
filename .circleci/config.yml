@@ -9,6 +9,7 @@ jobs:
   build:
     docker:
       - image: circleci/node:latest
+    context: dockerhub-context  
     steps:
       - checkout
       - setup_remote_docker:
@@ -96,7 +97,6 @@ workflows:
   build_and_deploy:
     jobs:
       - build
-          context:dockerhub-context
       - test:
           requires:
             - build
