@@ -1,0 +1,78 @@
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: DATA+OMITTED
+    server: https://F22733DA8C8D996237BB2A0B2F44702C.gr7.us-east-2.eks.amazonaws.com
+  name: arn:aws:eks:us-east-2:211125299284:cluster/nft-staking-cluster
+- cluster:
+    certificate-authority-data: DATA+OMITTED
+    server: https://91455217BBF3ED064CFD3CBC39DDD8D4.gr7.us-east-2.eks.amazonaws.com
+  name: arn:aws:eks:us-east-2:211125299284:cluster/nftstaking-cluster
+- cluster:
+    certificate-authority: /home/nidhi/.minikube/ca.crt
+    extensions:
+    - extension:
+        last-update: Sun, 14 Jul 2024 10:20:26 EDT
+        provider: minikube.sigs.k8s.io
+        version: v1.33.1
+      name: cluster_info
+    server: https://127.0.0.1:32771
+  name: minikube
+contexts:
+- context:
+    cluster: arn:aws:eks:us-east-2:211125299284:cluster/nftstaking-cluster
+    user: arn:aws:eks:us-east-2:211125299284:cluster/nftstaking-cluster
+  name: arn:aws:eks:us-east-2:211125299284:cluster/nftstaking-cluster
+- context:
+    cluster: minikube
+    extensions:
+    - extension:
+        last-update: Sun, 14 Jul 2024 10:20:26 EDT
+        provider: minikube.sigs.k8s.io
+        version: v1.33.1
+      name: context_info
+    namespace: default
+    user: minikube
+  name: minikube
+current-context: arn:aws:eks:us-east-2:211125299284:cluster/nftstaking-cluster
+kind: Config
+preferences: {}
+users:
+- name: arn:aws:eks:us-east-2:211125299284:cluster/nft-staking-cluster
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1beta1
+      args:
+      - --region
+      - us-east-2
+      - eks
+      - get-token
+      - --cluster-name
+      - nft-staking-cluster
+      - --output
+      - json
+      command: aws
+      env: null
+      interactiveMode: IfAvailable
+      provideClusterInfo: false
+- name: arn:aws:eks:us-east-2:211125299284:cluster/nftstaking-cluster
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1beta1
+      args:
+      - --region
+      - us-east-2
+      - eks
+      - get-token
+      - --cluster-name
+      - nftstaking-cluster
+      - --output
+      - json
+      command: aws
+      env: null
+      interactiveMode: IfAvailable
+      provideClusterInfo: false
+- name: minikube
+  user:
+    client-certificate: /home/nidhi/.minikube/profiles/minikube/client.crt
+    client-key: /home/nidhi/.minikube/profiles/minikube/client.key
