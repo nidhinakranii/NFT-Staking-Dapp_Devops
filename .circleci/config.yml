@@ -14,9 +14,6 @@ jobs:
           version: 20.10.24
           docker_layer_caching: true
       - run:
-          name: Install Hardhat
-          command: yarn add --dev hardhat
-      - run:
           name: Log in to Docker Hub
           command: echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
       - run:
@@ -43,6 +40,9 @@ jobs:
     executor: docker-executor  
     steps:
       - checkout
+      - run:
+          name: Install Hardhat
+          command: sudo yarn add --dev hardhat
       - run:
           name: Run Hardhat Tests
           command: |
