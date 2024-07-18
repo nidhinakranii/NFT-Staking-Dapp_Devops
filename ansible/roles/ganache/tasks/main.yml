@@ -32,10 +32,9 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install Ansible and Kubernetes dependencies
+          name: Install Ansible and Kubernetes Python module
           command: |
             pip install ansible
-            pip install openshift
             pip install kubernetes
       - run:
           name: Deploy to Kubernetes
