@@ -22,4 +22,4 @@ RUN yarn hardhat compile
 # RUN yarn hardhat run scripts/deploy-vault.js --network ganache
 
 # Set the entry point for the application
-CMD ["sh", "-c", "git config --global user.email nidhinakranii@gmail.com && git config --global user.name nidhinakranii && git config --global --add safe.directory /app/kryptopunks-config && yarn hardhat run scripts/deploy-vault.js --network ganache"]
+CMD ["sh", "-c", "git config --global user.email nidhinakranii@gmail.com && git config --global user.name nidhinakranii && git config --global --add safe.directory /app/kryptopunks-config && yarn hardhat run scripts/deploy-vault.js --network http://172.29.207.153:8545"]

@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: nidhinakrani/frontend:latest  # Replace with your actual Docker Hub username
+          image: nidhinakrani/frontend:latest
           ports:
             - containerPort: 3003
 ---
