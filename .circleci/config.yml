@@ -20,6 +20,16 @@ jobs:
           name: Build and Run Docker Compose
           command: docker-compose -f docker-compose.yml build
       - run:
+          name: Build Frontend Docker Image
+          command: |
+            cd front-end
+            docker build -t frontend:latest .
+      - run:
+          name: Build Backend Docker Image
+          command: |
+            cd smart_contracts
+            docker build -t backend:latest .
+      - run:
           name: Push Frontend Image
           command: docker tag frontend:latest "$DOCKERHUB_USERNAME/frontend:latest" && docker push "$DOCKERHUB_USERNAME/frontend:latest"
       - run:
