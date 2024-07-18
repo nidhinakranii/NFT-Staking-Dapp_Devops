@@ -26,34 +26,32 @@ jobs:
             docker push $DOCKERHUB_USERNAME/nft-backend
             docker push $DOCKERHUB_USERNAME/nft-frontend
 
-  deploy:
+  deploy-to-eks:
     docker:
       - image: circleci/python:3.8
+    working_directory: ~/repo
     steps:
       - checkout
       - run:
-          name: Install dependencies
+          name: Install Ansible and Dependencies
           command: |
             sudo apt-get update
-            sudo apt-get install -y python3-pip
-            pip3 install kubernetes ansible
+            sudo apt-get install -y ansible awscli
       - run:
-          name: Install Ansible
+          name: Configure AWS CLI
           command: |
-            pip install ansible
+            aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+            aws configure set region $AWS_REGION
       - run:
-          name: Deploy to Kubernetes
-          command: |
-            ansible-playbook -i ansible/inventory ansible/playbooks/deploy.yml
+          name: Run Ansible Playbook
+          command: ansible-playbook ansible/deploy.yml -i ansible/hosts
 
 workflows:
-  build_and_deploy:
+  version: 2
+  build-and-deploy:
     jobs:
-      - build:
-          context:
-            - dockerhub-context
-      - deploy:
+      - build-and-push-docker
+      - deploy-to-eks:
           requires:
-            - build
-          context:
-            - dockerhub-context
+            - build-and-push-docker
