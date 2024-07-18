@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: $DOCKERHUB_USERNAME/backend:latest  # Replace with your actual Docker Hub username
+          image: nidhinakrani/backend:latest  # Replace with your actual Docker Hub username
           ports:
             - containerPort: 4000
           env:
