@@ -15,18 +15,18 @@
 
     - name: Deploy Ganache
       k8s:
-        kubeconfig: /home/nidhi/.kube/config
+        # kubeconfig: /home/nidhi/.kube/config
         state: present
         src: k8s/ganache-deployment.yml
 
     - name: Deploy Backend
       k8s:
-        kubeconfig: ~/.kube/config
+        # kubeconfig: ~/.kube/config
         state: present
         src: k8s/backend-deployment.yml
 
     - name: Deploy Frontend
       k8s:
-        kubeconfig: ~/.kube/config
+        # kubeconfig: ~/.kube/config
         state: present
         src: k8s/frontend-deployment.yml
