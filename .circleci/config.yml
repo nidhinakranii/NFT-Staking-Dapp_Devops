@@ -30,16 +30,18 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install Ansible and Dependencies
+          name: Install Ansible, Boto3, and Dependencies
           command: |
             sudo apt-get update
-            sudo apt-get install -y ansible awscli
+            sudo apt-get install -y ansible
+            pip install boto3
       - run:
-          name: Configure AWS CLI
+          name: Configure AWS Credentials
           command: |
-            aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-            aws configure set region $AWS_REGION
+            echo "[default]" > ~/.aws/credentials
+            echo "aws_access_key_id = $AWS_ACCESS_KEY_ID" >> ~/.aws/credentials
+            echo "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY" >> ~/.aws/credentials
+            echo "region = $AWS_REGION" >> ~/.aws/config
       - run:
           name: Run Ansible Playbook
           command: ansible-playbook ansible/playbooks/deploy.yml -i ansible/inventory/hosts
